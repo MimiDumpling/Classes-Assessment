@@ -111,25 +111,99 @@ class Student(object):
         self.address = address
 
 
-class Question(object):
+class QuestionMixin(object):
     """A base class for questions on exams."""
 
     def __init__(self, question, correct_answer):
         """To do on instantiation."""
 
         self.question = question
-        self. correct_answer = correct_answer
+        self.correct_answer = correct_answer
+
+    def ask_and_evaluate(self, question):
+        """Prints question to console and prompts user for answer"""
+
+        user_answer = raw_input("{question} > ".format(question))
+        
+        if user_answer == self.correct_answer:
+            return True
+        else:
+            return False
 
 
-class Exam(object):
+class Exam(QuestionMixin, object):
     """A base class for creating exams."""
 
-    def __init__(self, name, questions):
+    def __init__(self, name):
+        """To do on instantiation."""
         self.name = name
-        self.questions = []
+        questions = []
+
+    def add_question(self, question):
+        """adds questions to Exam's list of questions"""
+        
+        # tried testing this. it isn't working...
+        #QuestionMixin.__init__(question)
+
+        # tried testing this. it isn't working...
+        # NameError: global name 'questions' is not defined
+        return questions.append(question)
 
 
+    def administers(self):
+        """ Administers the exam questions and returns tally of correct answers."""
+
+        questions = get_questions()
+
+        score = 0
+
+        for question in questions:
+
+            answer = ask_and_evaluate(question)
+
+            if answer == True:
+                score += 1
+            else:
+                score += 0
+
+        number_of_questions = len(questions)
+        final_score = float(score/number_of_questions)
+
+        return final_score
 
 
+class StudentExam(Student, QuestionMixin, Exam, object):
+    """Stores a student's info, administers an exam, returns student's score for exam."""
 
+    def __init__(self):
+        """To do on instantiation."""
+        # not sure what to put in here
+
+    def take_test(self):
+        """administers exam and assigns score."""
+
+        # not sure if this is how to do this
+        final_score = Exam.administers(self)
+
+        print "Your score is: {final_score}.".format(final_score)
+
+
+def example():
+    """creates exam, adds questions to exam, creates student, administers exam"""
+
+    # maybe this is a start?
+    # exam = take_test()
+    # student = Student()
+    # questions = exam.add_question()
+
+    # student_exam = StudentExam(student, exam)
+
+    # take_test()
+
+
+class Quiz(object):
+    """gives student questions, return pass/fail based on score """
+
+    # create an exam, but when scoring, if scores lower than 50% return fail
+    # if scores are atleast 50%, return pass
 
